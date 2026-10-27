@@ -19,3 +19,25 @@ class ToolManager:
             "department": employee["department"],
             "email": employee["email"]
         }
+
+
+class ToolDispatcher:
+
+    def __init__(self, tool_manager):
+        self.tool_manager = tool_manager
+
+    def execute(self, tool_name, arguments=None):
+        if arguments is None:
+            arguments = {}
+
+        if tool_name != "get_my_profile":
+            return {
+                "error": "Tool not permitted"
+            }
+
+        if not isinstance(arguments, dict) or arguments:
+            return {
+                "error": "Unexpected tool arguments"
+            }
+
+        return self.tool_manager.get_my_profile()
