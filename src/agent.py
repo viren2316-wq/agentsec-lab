@@ -1,6 +1,7 @@
 
 from src.tools import ToolManager, ToolDispatcher
 from src.llm import LocalLLM
+from src.documents import DocumentManager
 
 
 class SecurityAgent:
@@ -10,6 +11,7 @@ class SecurityAgent:
         self.tools = ToolManager(current_user_id)
         self.llm = llm if llm is not None else LocalLLM()
         self.dispatcher = ToolDispatcher(self.tools)
+        self.documents = DocumentManager()
 
     def process_message(self, message):
         message = message.strip()
@@ -69,6 +71,18 @@ class SecurityAgent:
 
             except Exception as error:
                 return f"Tool request error: {error}"
+            
+        elif command == "document":
+            document = self.documents.read_document(
+                "expense_policy"
+            )
+
+            if document is None:
+                return "Document not found."
+
+            return self.llm.summarize_document(document)
+
 
         else:
             return "Unknown command. Type 'help' for assistance."
+        "document - Summarize the expense policy\n"
