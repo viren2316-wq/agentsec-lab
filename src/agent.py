@@ -1,26 +1,34 @@
 
+from src.tools import ToolManager
+
+
 class SecurityAgent:
 
-    def __init__(self):
+    def __init__(self, current_user_id=1):
         self.name = "AgentSec"
+        self.tools = ToolManager(current_user_id)
 
     def process_message(self, message):
-        message = message.strip()
+        message = message.strip().lower()
 
-        if message.lower() == "hello":
-            return "Hello! I am AgentSec, your AI security assistant."
+        if message == "hello":
+            return "Hello! I am AgentSec, your security assistant."
 
-        elif message.lower() == "help":
+        elif message == "help":
             return (
                 "Available commands:\n"
                 "hello - Greet the agent\n"
-                "help - Show available commands\n"
+                "help - Display commands\n"
                 "status - Check agent status\n"
-                "exit - Close the agent"
+                "profile - View your employee profile\n"
+                "exit - Exit the program"
             )
 
-        elif message.lower() == "status":
+        elif message == "status":
             return "AgentSec is running successfully."
 
+        elif message == "profile":
+            return self.tools.get_my_profile()
+
         else:
-           return "Unknown command. Type 'help' for assistance."
+            return "Unknown command. Type 'help' for assistance."
