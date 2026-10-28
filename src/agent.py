@@ -2,6 +2,7 @@
 from src.tools import ToolManager, ToolDispatcher
 from src.llm import LocalLLM
 from src.documents import DocumentManager
+from src.guards import OutputGuard
 
 
 class SecurityAgent:
@@ -9,9 +10,13 @@ class SecurityAgent:
     def __init__(self, current_user_id=1, llm=None):
         self.name = "AgentSec"
         self.tools = ToolManager(current_user_id)
-        self.llm = llm if llm is not None else LocalLLM()
         self.dispatcher = ToolDispatcher(self.tools)
+        self.llm = llm if llm is not None else LocalLLM()
         self.documents = DocumentManager()
+
+        self.output_guard = OutputGuard(
+            blocked_markers={"SECURITY_VALIDATION_MARKER_7421"}
+        )
 
     def process_message(self, message):
         message = message.strip()
@@ -29,6 +34,7 @@ class SecurityAgent:
                 "profile - View your employee profile\n"
                 "ask <question> - Ask the AI model\n"
                 "tool <question> - Request an AI tool\n"
+                "document - Summarize expense policy\n"
                 "exit - Exit the program"
             )
 
@@ -71,7 +77,7 @@ class SecurityAgent:
 
             except Exception as error:
                 return f"Tool request error: {error}"
-            
+
         elif command == "document":
             document = self.documents.read_document(
                 "expense_policy"
@@ -80,9 +86,13 @@ class SecurityAgent:
             if document is None:
                 return "Document not found."
 
-            return self.llm.summarize_document(document)
-
+            try:
+                return self.llm.summarize_document_guarded(
+                    document,
+                    self.output_guard
+                )
+            except Exception as error:
+                return f"Document processing error: {error}"
 
         else:
             return "Unknown command. Type 'help' for assistance."
-        "document - Summarize the expense policy\n"

@@ -12,3 +12,8 @@ data/*.db-shm
 data/*.db-wal
 # Local security audit logs
 reports/audit_log.jsonl
+
+*:Zone.Identifier
+dashboard/app_backup.py
+reports/first_successful_injection.txt
+reports/injection_trials_02.txt
