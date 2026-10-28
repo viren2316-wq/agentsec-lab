@@ -75,4 +75,3 @@ The hardened dispatcher rejected the same tool request.
 The diagram represents the isolated attack-comparison harness.
 It does not imply that the ordinary interactive agent exposes
 the deliberately vulnerable dispatcher.
-```
