@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example
+.pytest_cache/
+# Generated local databases
+data/*.db
+data/*.db-journal
+data/*.db-shm
+data/*.db-wal
+# Local security audit logs
+reports/audit_log.jsonl
